@@ -53,8 +53,22 @@ CREATE TABLE songs (
 
 - Copy data from `data.sql`, paste it in workspace, highlight all content and run code.
 
+<br>
+
 ### 2. Select only the Names of all the Bands
 
 ```sql
+SELECT name FROM bands;
 SELECT bands.name AS 'Band Name' FROM bands;
+```
+
+<br>
+
+### 3. Select the Oldest Album
+
+```sql
+SELECT * FROM albums
+WHERE release_year IS NOT NULL
+ORDER BY release_year ASC 
+LIMIT 1;
 ```
