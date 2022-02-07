@@ -83,3 +83,14 @@ JOIN albums ON bands.id = albums.band_id
 GROUP BY albums.band_id
 HAVING COUNT(albums.id) > 0;
 ```
+
+<br>
+
+### 5. Get all Bands that have No Albums
+
+```sql
+SELECT bands.name AS 'Band Name' FROM bands
+LEFT JOIN albums ON bands.id = albums.band_id
+GROUP BY bands.id, albums.band_id
+HAVING COUNT(albums.id) = 0;
+```
