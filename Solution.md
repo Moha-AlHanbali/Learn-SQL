@@ -6,6 +6,8 @@
 
 - Install  [MySQL](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-mysql-client2) Extension on `VSCode`.
 
+- Run the command `$ sudo service mysql start`.
+
 - Create a new connection with the extension, using the credentials you created while installing MySQL earlier.
 
 - Go to Database tab and right-click on the connection, choose New Database.
@@ -51,3 +53,8 @@ CREATE TABLE songs (
 
 - Copy data from `data.sql`, paste it in workspace, highlight all content and run code.
 
+### 2. Select only the Names of all the Bands
+
+```sql
+SELECT bands.name AS 'Band Name' FROM bands;
+```
