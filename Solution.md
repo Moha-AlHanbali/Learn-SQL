@@ -150,4 +150,12 @@ WHERE id = 8;
 SELECT * FROM bands;
 ```
 
-<sql>
+<br>
+
+### 10. Get the Average Length of all Songs
+
+```sql
+SELECT AVG(length) AS 'Average Song Duration' FROM songs;
+```
+
+<br>
