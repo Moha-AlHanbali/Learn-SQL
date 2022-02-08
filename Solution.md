@@ -120,3 +120,18 @@ WHERE id = 4;
 ```
 
 <br>
+
+### 8. Insert a record for your favorite Band and one of their Albums
+
+```sql
+INSERT INTO bands
+VALUES (8, 'Draconian');
+SELECT * FROM bands;
+
+INSERT INTO albums
+VALUES (19, 'Turning Season Within', 2008, 8);
+
+SELECT * FROM albums;
+```
+
+<br>
