@@ -106,3 +106,80 @@ GROUP BY songs.album_id
 ORDER BY Duration DESC
 LIMIT 1; 
 ```
+<br>
+
+### 7. Update the Release Year of the Album with no Release Year
+
+```sql
+SELECT * FROM albums
+WHERE release_year IS NULL;
+
+UPDATE albums
+SET release_year = 1986
+WHERE id = 4;
+```
+
+<br>
+
+### 8. Insert a record for your favorite Band and one of their Albums
+
+```sql
+INSERT INTO bands
+VALUES (8, 'Draconian');
+SELECT * FROM bands;
+
+INSERT INTO albums
+VALUES (19, 'Turning Season Within', 2008, 8);
+
+SELECT * FROM albums;
+```
+
+<br>
+
+### 9. Delete the Band and Album you added in #8
+
+```sql
+DELETE FROM albums 
+WHERE id = 19;
+
+SELECT * FROM albums;
+
+DELETE FROM bands
+WHERE id = 8;
+
+SELECT * FROM bands;
+```
+
+<br>
+
+### 10. Get the Average Length of all Songs
+
+```sql
+SELECT AVG(length) AS 'Average Song Duration' FROM songs;
+```
+
+<br>
+
+### 11. Select the longest Song off each Album
+
+```sql
+SELECT albums.name AS 'Album', albums.release_year AS 'Release Year',
+MAX(songs.length) AS 'Duration'
+FROM albums
+JOIN songs
+ON albums.id = songs.album_id
+GROUP BY songs.album_id;
+```
+
+<br>
+
+### 12. Get the number of Songs for each Band
+
+```sql
+SELECT bands.name AS 'Band',
+COUNT(songs.id) AS 'Number of Songs'
+FROM bands
+JOIN albums ON bands.id = albums.band_id
+JOIN songs ON albums.id = songs.album_id
+GROUP BY albums.band_id;
+```
