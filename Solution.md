@@ -106,3 +106,17 @@ GROUP BY songs.album_id
 ORDER BY Duration DESC
 LIMIT 1; 
 ```
+<br>
+
+### 7. Update the Release Year of the Album with no Release Year
+
+```sql
+SELECT * FROM albums
+WHERE release_year IS NULL;
+
+UPDATE albums
+SET release_year = 1986
+WHERE id = 4;
+```
+
+<br>
