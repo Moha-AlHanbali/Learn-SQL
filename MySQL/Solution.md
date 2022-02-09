@@ -1,4 +1,4 @@
-# Exercises Solution
+# Exercises Solution (MySQL)
 
 ## Setup
 
