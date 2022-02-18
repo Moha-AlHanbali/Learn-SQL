@@ -116,3 +116,15 @@
 8. From the following table, write a SQL query to find all the customers. Sort the result-set in descending order on 3rd field. Return customer name, city and grade. 
 9. From the following table, write a SQL query to count the unique orders, highest purchase amount for each customer. Sort the result-set in descending order on 2nd field. Return customer ID, number of distinct orders and highest purchase amount by each customer. 
 10. From the following table, write a SQL query to calculate summation of purchase amount, total commission (15% for all salesmen) by each order date. Sort the result-set on order date. Return order date, summation of purchase amount and commission. 
+
+## Query on Multiple Tables
+
+1. From the following tables, write a SQL query to find the salespersons and customers who live in same city. Return customer name, salesperson name and salesperson city.
+2. From the following tables, write a SQL query to find all the customers along with the salesperson who works for them. Return customer name, and salesperson name.
+3. From the following tables, write a SQL query to find those sales people who generated orders for their customers but not located in the same city. Return ord_no, cust_name, customer_id (orders table), salesman_id (orders table).
+4. From the following tables, write a SQL query to find those orders made by customers. Return order number, customer name. 
+5. From the following tables, write a SQL query to find those customers where each customer has a grade and served by at least a salesperson who belongs to a city. Return cust_name as "Customer", grade as "Grade" and order_no as "Order No.".
+6. From the following table, write a SQL query to find those customers who served by a salesperson and the salesperson works at the commission in the range 12% to 14% (Begin and end values are included.). Return cust_name AS "Customer", city AS "City".
+7. From the following tables, write a SQL query to find those orders executed by the salesperson, ordered by the customer whose grade is greater than or equal to 200. Compute purch_amt*commission as "Commission". Return customer name, commission as "Commission%" and Commission.
+8. From the following table, write a SQL query to find those customers who made orders on October 5, 2012. Return customer_id, cust_name, city, grade, salesman_id, ord_no, purch_amt, ord_date, customer_id and salesman_id.
+

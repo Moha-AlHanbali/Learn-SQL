@@ -983,3 +983,87 @@ ORDER BY ord_date ASC;
 ```
 
 <br>
+
+### Query on Multiple Tables
+
+#### 1. From the following tables, write a SQL query to find the salespersons and customers who live in same city. Return customer name, salesperson name and salesperson city.
+
+```sql
+SELECT customer.cust_name, salesman.name, salesman.city FROM salesman
+JOIN customer ON salesman.salesman_id = customer.salesman_id;
+```
+
+<br>
+
+#### 2. From the following tables, write a SQL query to find all the customers along with the salesperson who works for them. Return customer name, and salesperson name.
+
+```sql
+SELECT customer.cust_name, salesman.name FROM salesman
+JOIN customer ON salesman.salesman_id = customer.salesman_id;
+```
+
+<br>
+
+#### 3. From the following tables, write a SQL query to find those sales people who generated orders for their customers but not located in the same city. Return ord_no, cust_name, customer_id (orders table), salesman_id (orders table).
+
+```sql
+SELECT orders.ord_no, customer.cust_name, customer.customer_id, salesman.salesman_id FROM salesman
+JOIN customer ON salesman.salesman_id = customer.salesman_id
+JOIN orders ON orders.customer_id = customer.customer_id
+WHERE salesman.city != customer.city;
+```
+
+<br>
+
+#### 4. From the following tables, write a SQL query to find those orders made by customers. Return order number, customer name.
+
+```sql
+SELECT orders.ord_no, customer.cust_name FROM orders
+JOIN customer ON orders.customer_id = customer.customer_id;
+```
+
+<br>
+
+#### 5. From the following tables, write a SQL query to find those customers where each customer has a grade and served by at least a salesperson who belongs to a city. Return cust_name as "Customer", grade as "Grade" and order_no as "Order No.".
+
+```sql
+SELECT customer.cust_name AS "Customer", customer.grade AS "Grade", orders.ord_no AS "Order No." FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+JOIN orders ON  customer.customer_id = orders.customer_id
+WHERE customer.grade IS NOT NULL
+AND salesman.city IS NOT NULL;
+```
+
+<br>
+
+#### 6. From the following table, write a SQL query to find those customers who served by a salesperson and the salesperson works at the commission in the range 12% to 14% (Begin and end values are included.). Return cust_name AS "Customer", city AS "City".
+
+```sql
+SELECT customer.cust_name AS "Customer", customer.city AS "City" FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+WHERE salesman.commission BETWEEN 0.12 AND 0.14;
+```
+
+<br>
+
+#### 7. From the following tables, write a SQL query to find those orders executed by the salesperson, ordered by the customer whose grade is greater than or equal to 200. Compute purch_amt*commission as "Commission". Return customer name, commission as "Commission%" and Commission.
+
+```sql
+SELECT orders.ord_no AS "Order No.", customer.cust_name AS "Customer", salesman.commission AS "Commission %", (orders.purch_amt * salesman.commission) AS "Commission" FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+JOIN orders ON customer.customer_id = orders.customer_id
+WHERE customer.grade >= 200;
+```
+
+<br>
+
+#### 8. From the following table, write a SQL query to find those customers who made orders on October 5, 2012. Return customer_id, cust_name, city, grade, salesman_id, ord_no, purch_amt, ord_date, customer_id and salesman_id.
+
+```sql
+SELECT customer.customer_id, customer.cust_name, customer.city, customer.grade, customer.salesman_id, orders.ord_no, orders.purch_amt, orders.ord_date, orders.customer_id FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+JOIN orders ON customer.customer_id = orders.customer_id
+WHERE orders.ord_date = '2012-10-05';
+```
+
+<br>
