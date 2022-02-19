@@ -1067,3 +1067,300 @@ WHERE orders.ord_date = '2012-10-05';
 ```
 
 <br>
+
+### SQL JOINS
+
+#### 1. From the following tables write a SQL query to find the salesperson and customer who belongs to same city. Return Salesman, cust_name and city.
+
+```sql
+SELECT salesman.name, customer.cust_name, customer.city FROM salesman, customer
+WHERE salesman.city = customer.city;
+```
+
+<br>
+
+#### 2. From the following tables write a SQL query to find those orders where order amount exists between 500 and 2000. Return ord_no, purch_amt, cust_name, city.
+
+```sql
+SELECT orders.ord_no, orders.purch_amt, customer.cust_name, customer.city FROM orders
+JOIN customer ON orders.customer_id = customer.customer_id
+WHERE orders.purch_amt BETWEEN 500 AND 2000;
+```
+
+<br>
+
+#### 3. From the following tables write a SQL query to find the salesperson(s) and the customer(s) he handle. Return Customer Name, city, Salesman, commission.
+
+```sql
+SELECT customer.cust_name as "Customer Name", customer.city, salesman.name AS "Salesman", salesman.commission FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id;
+```
+
+<br>
+
+#### 4. From the following tables write a SQL query to find those salespersons who received a commission from the company more than 12%. Return Customer Name, customer city, Salesman, commission.
+
+```sql
+SELECT customer.cust_name as "Customer Name", customer.city, salesman.name AS "Salesman", salesman.commission FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+WHERE salesman.commission > 0.12;
+```
+
+<br>
+
+#### 5. From the following tables write a SQL query to find those salespersons do not live in the same city where their customers live and received a commission from the company more than 12%. Return Customer Name, customer city, Salesman, salesman city, commission. 
+
+```sql
+SELECT customer.cust_name as "Customer Name", customer.city AS "Customer City", salesman.name AS "Salesman", salesman.city AS "Salesman City", salesman.commission AS "Commission" FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+WHERE salesman.city != customer.city
+AND salesman.commission > 0.12;
+```
+
+<br>
+
+### 6. From the following tables write a SQL query to find the details of an order. Return ord_no, ord_date, purch_amt, Customer Name, grade, Salesman, commission.
+
+```sql
+SELECT orders.ord_no, orders.ord_date, orders.purch_amt, customer.cust_name as "Customer Name", customer.grade AS "Customer Grade", salesman.name AS "Salesman", salesman.commission AS "Commission" FROM orders
+JOIN customer on orders.customer_id = customer.customer_id
+JOIN salesman ON customer.salesman_id = salesman.salesman_id;
+```
+
+<br>
+
+#### ** 7. Write a SQL statement to make a join on the tables salesman, customer and orders in such a form that the same column of each table will appear once and only the relational rows will come.
+
+```sql
+SELECT * FROM orders
+NATURAL JOIN customer
+NATURAL JOIN salesman;
+```
+
+<br>
+
+#### 8. From the following tables write a SQL query to display the cust_name, customer city, grade, Salesman, salesman city. The result should be ordered by ascending on customer_id.
+
+```sql
+SELECT customer.cust_name, customer.city, customer.grade, salesman.name, salesman.city FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+ORDER BY customer.customer_id ASC;
+```
+
+<br>
+
+#### 9. From the following tables write a SQL query to find those customers whose grade less than 300. Return cust_name, customer city, grade, Salesman, saleman city. The result should be ordered by ascending customer_id.
+
+```sql
+SELECT customer.cust_name, customer.city, customer.grade, salesman.name, salesman.city FROM customer
+JOIN salesman ON customer.salesman_id = salesman.salesman_id
+WHERE customer.grade < 300
+ORDER BY customer.customer_id ASC;
+```
+
+<br>
+
+#### 10. Write a SQL statement to make a report with customer name, city, order number, order date, and order amount in ascending order according to the order date to find that either any of the existing customers have placed no order or placed one or more orders.
+
+```sql
+SELECT customer.cust_name, customer.city, orders.ord_no, orders.ord_date, orders.purch_amt FROM customer
+LEFT JOIN orders ON customer.customer_id = orders.customer_id
+ORDER BY orders.ord_date ASC;
+```
+
+<br>
+
+#### 11. Write a SQL statement to make a report with customer name, city, order number, order date, order amount salesman name and commission to find that either any of the existing customers have placed no order or placed one or more orders by their salesman or by own.
+
+```sql
+SELECT customer.cust_name, customer.city, orders.ord_no, orders.ord_date, orders.purch_amt, salesman.name, salesman.commission FROM customer
+LEFT JOIN orders ON customer.customer_id = orders.customer_id
+LEFT JOIN salesman ON customer.salesman_id = salesman.salesman_id;
+```
+
+<br>
+
+
+#### 12. Write a SQL statement to make a list in ascending order for the salesmen who works either for one or more customer or not yet join under any of the customers.
+
+```sql
+SELECT salesman.salesman_id, salesman.name, customer.customer_id, customer.cust_name FROM salesman
+LEFT JOIN customer ON salesman.salesman_id = customer.salesman_id;
+```
+
+<br>
+
+#### ** 13. From the following tables write a SQL query to list all salespersons along with customer name, city, grade, order number, date, and amount. Condition for selecting list of salesmen : 1. Salesmen who works for one or more customer or, 2. Salesmen who not yet join under any customer, Condition for selecting list of customer : 3. placed one or more orders, or 4. no order placed to their salesman.
+
+```sql
+SELECT salesman.salesman_id, salesman.name, customer.customer_id, customer.cust_name, customer.city, customer.grade, orders.ord_no, orders.ord_date, orders.purch_amt FROM salesman
+LEFT JOIN customer ON salesman.salesman_id = customer.salesman_id
+LEFT JOIN orders ON salesman.salesman_id = orders.salesman_id;
+```
+
+<br>
+
+#### 14. Write a SQL statement to make a list for the salesmen who either work for one or more customers or yet to join any of the customer. The customer may have placed, either one or more orders on or above order amount 2000 and must have a grade, or he may not have placed any order to the associated supplier. 
+
+```sql
+SELECT customer.customer_id, customer.cust_name, customer.city, customer.grade, salesman.salesman_id, salesman.name, orders.ord_no, orders.ord_date, orders.purch_amt FROM customer
+RIGHT JOIN salesman ON salesman.salesman_id = customer.salesman_id
+LEft JOIN orders ON customer.customer_id = orders.customer_id
+WHERE orders.purch_amt >= 2000
+OR customer.grade IS NOT NULL;
+```
+
+<br>
+
+#### 15. Write a SQL statement to make a report with customer name, city, order no. order date, purchase amount for those customers from the existing list who placed one or more orders or which order(s) have been placed by the customer who is not on the list. 
+
+```sql
+SELECT customer.customer_id, customer.cust_name, customer.city, customer.grade, orders.ord_no, orders.ord_date, orders.purch_amt FROM customer
+RIGHT JOIN orders ON customer.customer_id = orders.customer_id;
+```
+
+<br>
+
+#### 16. Write a SQL statement to make a report with customer name, city, order no. order date, purchase amount for only those customers on the list who must have a grade and placed one or more orders or which order(s) have been placed by the customer who is neither in the list nor have a grade.
+
+```sql
+SELECT customer.customer_id, customer.cust_name, customer.city, customer.grade, orders.ord_no, orders.ord_date, orders.purch_amt FROM customer
+RIGHT JOIN orders ON customer.customer_id = orders.customer_id
+WHERE customer.grade IS NOT NULL;
+```
+
+<br>
+
+#### 17. Write a SQL query to combine each row of salesman table with each row of customer table.
+
+```sql
+SELECT * FROM salesman
+CROSS JOIN customer;
+```
+
+<br>
+
+
+#### 18. Write a SQL statement to make a cartesian product between salesman and customer i.e. each salesman will appear for all customer and vice versa for that salesman who belongs to a city.
+
+```sql
+SELECT * FROM salesman
+CROSS JOIN customer
+WHERE salesman.city IS NOT NULL;
+```
+
+<br>
+
+#### 19. Write a SQL statement to make a cartesian product between salesman and customer i.e. each salesman will appear for all customer and vice versa for those salesmen who belongs to a city and the customers who must have a grade.
+
+```sql
+SELECT * FROM salesman
+CROSS JOIN customer
+WHERE salesman.city IS NOT NULL
+AND customer.grade IS NOT NULL;
+```
+
+<br>
+
+#### 20. Write a SQL statement to make a cartesian product between salesman and customer i.e. each salesman will appear for all customer and vice versa for those salesmen who must belong a city which is not the same as his customer and the customers should have an own grade.
+
+```sql
+SELECT * FROM salesman
+CROSS JOIN customer
+WHERE salesman.city IS NOT NULL
+AND customer.grade IS NOT NULL
+AND salesman.city != customer.city;
+```
+
+<br>
+
+#### 21. From the following tables write a SQL query to select all rows from both participating tables as long as there is a match between pro_com and com_id.
+
+```sql
+SELECT * FROM company_mast
+JOIN item_mast ON company_mast.COM_ID = item_mast.PRO_COM;
+```
+
+<br>
+
+#### 22. Write a SQL query to display the item name, price, and company name of all the products. 
+
+```sql
+SELECT item_mast.pro_name, item_mast.pro_price, item_mast.pro_com FROM item_mast
+JOIN company_mast ON item_mast.PRO_COM = company_mast.COM_ID;
+```
+
+<br>
+
+#### 23. From the following tables write a SQL query to calculate the average price of items of each company. Return average value and company name.
+
+```sql
+SELECT AVG(item_mast.pro_price), company_mast.com_name FROM item_mast
+JOIN company_mast ON item_mast.PRO_COM = company_mast.COM_ID
+GROUP BY company_mast.com_name;
+```
+
+<br>
+
+#### 24. From the following tables write a SQL query to calculate and find the average price of items of each company higher than or equal to Rs. 350. Return average value and company name.
+
+```sql
+SELECT AVG(item_mast.pro_price), company_mast.com_name FROM item_mast
+JOIN company_mast ON item_mast.PRO_COM = company_mast.COM_ID
+GROUP BY company_mast.com_name
+HAVING AVG(item_mast.pro_price) >= 350;
+```
+
+<br>
+
+#### 25. From the following tables write a SQL query to find the most expensive product of each company. Return pro_name, pro_price and com_name.
+
+```sql
+SELECT item_mast.pro_name, item_mast.pro_price, company_mast.com_name FROM item_mast
+JOIN company_mast ON item_mast.PRO_COM = company_mast.COM_ID
+AND item_mast.pro_price = (
+    SELECT MAX(item_mast.pro_price) FROM item_mast
+    WHERE item_mast.PRO_COM = company_mast.COM_ID 
+);
+```
+
+<br>
+
+#### 26. From the following tables write a SQL query to display all the data of employees including their department.
+
+```sql
+SELECT * FROM emp_details
+JOIN emp_department ON emp_details.emp_dept = emp_department.dpt_code;
+```
+
+<br>
+
+#### 27. From the following tables write a SQL to display the first name and last name of each employee, along with the name and sanction amount for their department.
+
+```sql
+SELECT emp_details.emp_fname, emp_details.emp_lname, emp_department.dpt_name, emp_department.dpt_allotment FROM emp_details
+JOIN emp_department ON emp_details.emp_dept = emp_department.dpt_code;
+```
+
+<br>
+
+#### 28. From the following tables write a SQL query to find the departments with a budget more than Rs. 50000 and display the first name and last name of employees.
+
+```sql
+SELECT emp_details.emp_fname, emp_details.emp_lname, emp_department.dpt_name, emp_department.dpt_allotment FROM emp_details
+JOIN emp_department ON emp_details.emp_dept = emp_department.dpt_code
+WHERE emp_department.dpt_allotment > 50000;
+```
+
+<br>
+
+#### 29. From the following tables write a SQL query to find the names of departments where more than two employees are working. Return dpt_name.
+
+```sql
+SELECT emp_department.dpt_name, COUNT(emp_details.emp_dept) FROM emp_department
+JOIN emp_details ON emp_department.dpt_code = emp_details.emp_dept
+GROUP BY emp_department.dpt_name
+HAVING COUNT(emp_details.emp_dept) > 2;
+```
+
+<br>
