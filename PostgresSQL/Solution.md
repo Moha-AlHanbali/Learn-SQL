@@ -2106,3 +2106,285 @@ WHERE hire_date > '1987-09-07';
 
 <br>
  
+### SQL JOINS
+
+#### 1. From the following tables, write a SQL query to find the first name, last name, department number, and department name for each employee. 
+
+```sql
+SELECT employees.first_name, employees.last_name, employees.department_id, departments.department_name FROM employees
+JOIN departments ON employees.department_id = departments.department_id;
+```
+
+<br>
+ 
+#### 2. From the following tables, write a SQL query to find the first name, last name, department, city, and state province for each employee.
+
+```sql
+SELECT employees.first_name, employees.last_name, departments.department_name, locations.city, locations.state_province FROM employees
+JOIN departments ON employees.department_id = departments.department_id
+JOIN locations ON departments.location_id = locations.location_id;
+```
+
+<br>
+ 
+#### 3. From the following table, write a SQL query to find the first name, last name, salary, and job grade for all employees. 
+
+```sql
+SELECT employees.first_name, employees.last_name, employees.salary, job_grades.grade_level FROM employees, job_grades
+WHERE employees.salary BETWEEN job_grades.lowest_sal AND job_grades.highest_sal;
+```
+
+<br>
+ 
+#### 4. From the following tables, write a SQL query to find all those employees who work in department ID 80 or 40. Return first name, last name, department number and department name.
+
+```sql
+SELECT employees.first_name, employees.last_name, departments.department_id, departments.department_name FROM employees, departments
+WHERE employees.department_id = departments.department_id
+AND departments.department_id IN (80, 40);
+```
+
+<br>
+ 
+#### 5. From the following tables, write a SQL query to find those employees whose first name contains a letter ‘z’. Return first name, last name, department, city, and state province.
+
+```sql
+SELECT employees.first_name, employees.last_name, departments.department_name, locations.city, locations.state_province FROM employees
+JOIN departments ON employees.department_id = departments.department_id
+JOIN locations ON departments.location_id = locations.location_id
+WHERE employees.first_name LIKE '%z%';
+```
+
+<br>
+ 
+#### 6. From the following table, write a SQL query to find all departments including those without any employee. Return first name, last name, department ID, department name.
+
+```sql
+SELECT employees.first_name, employees.last_name, departments.department_id, departments.department_name FROM employees
+RIGHT JOIN departments ON employees.department_id = departments.department_id;
+```
+
+<br>
+ 
+#### 7. From the following table, write a SQL query to find those employees who earn less than the employee of ID 182. Return first name, last name and salary. 
+
+```sql
+SELECT employees.first_name, employees.last_name,employees.salary FROM employees
+WHERE employees.salary < (
+    SELECT employees.salary FROM employees
+    WHERE employees.employee_id = 182
+);
+```
+
+<br>
+ 
+#### * 8. From the following table, write a SQL query to find the employees and their managers. Return the first name of the employee and manager. 
+
+```sql
+SELECT emp.first_name, mng.first_name AS "test" FROM employees emp
+JOIN employees mng ON emp.manager_id = mng.employee_id;
+```
+
+<br>
+ 
+#### 9. From the following tables, write a SQL query to display the department name, city, and state province for each department.
+
+```sql
+SELECT departments.department_name, locations.city, locations.state_province FROM departments
+JOIN locations ON departments.location_id = locations.location_id;
+```
+
+<br>
+ 
+#### 10. From the following tables, write a SQL query to find those employees who have or not any department. Return first name, last name, department ID, department name.
+
+```sql
+SELECT employees.first_name, employees.last_name, employees.department_id, departments.department_name FROM employees
+LEFT JOIN departments ON employees.department_id = departments.department_id;
+```
+
+<br>
+ 
+#### 11. From the following table, write a SQL query to find the employees and their managers. These managers do not work under any manager. Return the first name of the employee and manager.
+
+```sql
+SELECT emp.first_name AS "Employee", mng.first_name AS "Manager" FROM employees emp
+LEFT JOIN employees mng ON emp.manager_id = mng.employee_id;
+```
+
+<br>
+ 
+#### 12. From the following tables, write a SQL query to find those employees who work in a department where the employee of last name 'Taylor' works. Return first name, last name and department ID.
+
+```sql
+SELECT emp.first_name, emp.last_name, tlr.department_id FROM employees emp
+LEFT JOIN employees tlr ON emp.department_id = tlr.department_id
+WHERE tlr.last_name = 'Taylor';
+```
+
+<br>
+ 
+#### ** 13. From the following tables, write a SQL query to find those employees who joined on 1st January 1993 and leave on or before 31 August 1997. Return job title, department name, employee name, and joining date of the job. 
+
+```sql
+SELECT jobs.job_title, departments.department_name, CONCAT(employees.first_name, ' ', employees.last_name) AS "Employee Name", job_history.start_date FROM jobs
+JOIN job_history ON jobs.job_id = job_history.job_id
+JOIN employees ON jobs.job_id = employees.job_id
+JOIN departments ON employees.department_id = departments.department_id
+WHERE job_history.start_date >= '1993-01-01'
+AND job_history.start_date <= '1997-08-31';
+```
+
+<br>
+ 
+#### * 14. From the following tables, write a SQL query to find the difference between maximum salary of the job and salary of the employees. Return job title, employee name, and salary difference.
+
+```sql
+SELECT jobs.job_title, employees.first_name, (jobs.max_salary - employees.salary) AS "Salary Difference" FROM jobs
+JOIN employees USING (job_id);
+```
+
+<br>
+ 
+#### 15. From the following table, write a SQL query to compute the average salary, number of employees received commission in that department. Return department name, average salary and number of employees.
+
+```sql
+SELECT departments.department_name, AVG(employees.salary), COUNT(employees.employee_id) FROM employees
+JOIN departments USING (department_id)
+GROUP BY departments.department_id;
+```
+
+<br>
+ 
+#### 16. From the following tables, write a SQL query to compute the difference between maximum salary and salary of all the employees who works the department of ID 80. Return job title, employee name and salary difference.
+
+```sql
+SELECT jobs.job_title, employees.first_name, jobs.max_salary - employees.salary AS "Salary Difference" FROM jobs
+JOIN employees USING(job_id)
+WHERE employees.department_id = 80;
+```
+
+<br>
+ 
+#### 17. From the following table, write a SQL query to find the name of the country, city, and departments, which are running there.
+
+```sql
+SELECT countries.country_name, locations.city, departments.department_name FROM countries
+JOIN locations USING (country_id)
+JOIN departments USING(location_id);
+```
+
+<br>
+ 
+#### 18. From the following tables, write a SQL query to find the department name and the full name (first and last name) of the manager.
+
+```sql
+SELECT departments.department_name, employees.first_name, employees.last_name FROM departments
+JOIN employees ON employees.employee_id = departments.manager_id;
+```
+
+<br>
+ 
+#### 19. From the following table, write a SQL query to compute the average salary of employees for each job title. 
+
+```sql
+SELECT AVG(employees.salary), jobs.job_title FROM employees
+JOIN jobs ON employees.job_id = jobs.job_id
+GROUP BY jobs.job_title;
+```
+
+<br>
+ 
+#### 20. From the following table, write a SQL query to find those employees who earn $12000 and above. Return employee ID, starting date, end date, job ID and department ID. 
+
+```sql
+SELECT employees.employee_id, job_history.start_date, job_history.end_Date, job_history.job_id, job_history.department_id FROM employees
+JOIN job_history USING (employee_id)
+WHERE employees.salary >= 12000;
+```
+
+<br>
+ 
+#### ** 21. From the following tables, write a SQL query to find those departments where at least 2 employees work. Group the result set on country name and city. Return country name, city, and number of departments. 
+
+```sql
+SELECT countries.country_name, locations.city, COUNT(departments.department_id) FROM countries
+JOIN locations USING (country_id)
+JOIN departments USING (location_id)
+WHERE departments.department_id IN (
+    SELECT department_id FROM employees
+    GROUP BY department_id
+    HAVING COUNT(department_id) >= 2
+)
+GROUP BY countries.country_name, locations.city;
+```
+
+<br>
+ 
+#### 22. From the following tables, write a SQL query to find the department name, full name (first and last name) of the manager and their city. 
+
+```sql
+SELECT departments.department_name, CONCAT(employees.first_name, ' ', employees.last_name) AS "Full Name", locations.city FROM departments
+JOIN employees ON departments.manager_id = employees.employee_id
+JOIN locations USING (location_id); 
+```
+
+<br>
+ 
+#### 23. From the following tables, write a SQL query to compute the number of days worked by employees in a department of ID 80. Return employee ID, job title, number of days worked.
+
+```sql
+SELECT job_history.employee_id, jobs.job_title, (job_history.end_date - job_history.start_date) AS "Work Days" FROM job_history
+JOIN jobs USING (job_id)
+WHERE job_history.department_id = 80;
+```
+
+<br>
+ 
+#### 24. From the following tables, write a SQL query to find full name (first and last name), and salary of those employees who work in any department located in 'London' city.
+
+```sql
+SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS "Full Name", employees.salary FROM employees
+JOIN departments USING (department_id)
+JOIN locations ON departments.location_id = locations.location_id 
+AND locations.city = 'London';
+```
+
+<br>
+ 
+#### ** 25. From the following tables, write a SQL query to find full name (first and last name), job title, starting and ending date of last jobs of employees who worked without a commission percentage.
+
+```sql
+SELECT CONCAT(e.first_name, ' ', e.last_name) AS "Full Name", j.job_title FROM employees e
+JOIN (
+    SELECT MAX(start_date), MAX(end_date), employee_id FROM job_history
+    GROUP BY employee_id
+    ) h 
+    ON e.employee_id=h.employee_id
+    JOIN jobs j ON j.job_id=e.job_id
+    WHERE e.commission_pct = 0;
+```
+
+<br>
+ 
+#### 26. From the following tables, write a SQL query to find the department name, department ID, and number of employees in each department.
+
+```sql
+SELECT departments.department_name, departments.department_id, COUNT(employees.employee_id) FROM departments
+JOIN employees USING (department_id)
+GROUP BY department_id;
+```
+
+<br>
+ 
+#### 27. From the following tables, write a SQL query to find the full name (first and last name) of the employee with ID and name of the country presently where he/she is working. 
+
+```sql
+SELECT CONCAT(employees.first_name, ' ', employees.last_name), employees.employee_id, countries.country_name FROM employees
+JOIN departments USING (department_id)
+JOIN locations USING (location_id)
+JOIN countries USING (country_id);
+```
+
+<br>
+ 
