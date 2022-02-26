@@ -1549,7 +1549,12 @@ WHERE 1 <= (
 #### 16. From the following tables, write a SQL query to find the salespeople who deal multiple customers. Return salesman_id, name, city and commission.
 
 ```sql
-
+SELECT * FROM salesman
+WHERE salesman_id IN (
+    SELECT salesman_id FROM customer
+    GROUP BY salesman_id
+    HAVING COUNT(customer_id) > 1
+);
 ```
 
 <br>
@@ -1557,7 +1562,12 @@ WHERE 1 <= (
 #### 17. From the following tables, write a SQL query to find the salespeople who deal a single customer. Return salesman_id, name, city and commission.
 
 ```sql
-
+SELECT * FROM salesman
+WHERE salesman_id IN (
+    SELECT salesman_id FROM customer
+    GROUP BY salesman_id
+    HAVING COUNT(customer_id) = 1
+);
 ```
 
 <br>
@@ -1565,7 +1575,13 @@ WHERE 1 <= (
 #### 18. From the following tables, write a SQL query to find the salespeople who deal the customers with more than one order. Return salesman_id, name, city and commission.
 
 ```sql
-
+SELECT salesman.salesman_id, salesman.name, salesman.city, salesman.commission FROM salesman
+JOIN customer USING (salesman_id)
+WHERE customer_id IN (
+    SELECT customer_id FROM orders
+    GROUP BY customer_id
+    HAVING COUNT(customer_id) > 1
+);
 ```
 
 <br>
@@ -1573,7 +1589,10 @@ WHERE 1 <= (
 #### 19. From the following tables, write a SQL query to find the salespeople who deals those customers who live in the same city. Return salesman_id, name, city and commission.
 
 ```sql
-
+SELECT * FROM salesman
+WHERE city IN (
+    SELECT city FROM customer
+);
 ```
 
 <br>
@@ -1581,23 +1600,34 @@ WHERE 1 <= (
 #### 20. From the following tables, write a SQL query to find the salespeople whose place of living (city) matches with any of the city where customers live. Return salesman_id, name, city and commission.
 
 ```sql
-
+SELECT * FROM salesman
+WHERE salesman_id IN (
+    SELECT salesman_id FROM customer
+);
 ```
 
 <br>
  
-#### 21. From the following tables, write a SQL query to find all those salespeople whose name exist alphabetically after the customer’s name. Return salesman_id, name, city, commission.
+#### * 21. From the following tables, write a SQL query to find all those salespeople whose name exist alphabetically after the customer’s name. Return salesman_id, name, city, commission.
 
 ```sql
-
+SELECT * FROM salesman
+WHERE EXISTS (
+    SELECT salesman_id FROM customer
+    WHERE salesman.name < customer.cust_name
+);
 ```
 
 <br>
  
-#### 22. From the following table, write a SQL query to find all those customers who have a greater grade than any customer who belongs to the alphabetically lower than the city of New York. Return customer_id, cust_name, city, grade, salesman_id.
+#### * 22. From the following table, write a SQL query to find all those customers who have a greater grade than any customer who belongs to the alphabetically lower than the city of New York. Return customer_id, cust_name, city, grade, salesman_id.
 
 ```sql
-
+SELECT * FROM customer
+WHERE grade > ANY (
+    SELECT grade FROM customer
+    WHERE city < 'New York'
+);
 ```
 
 <br>
@@ -1605,15 +1635,26 @@ WHERE 1 <= (
 #### 23. From the following table, write a SQL query to find all those orders whose order amount greater than at least one of the orders of September 10th 2012. Return ord_no, purch_amt, ord_date, customer_id and salesman_id.
 
 ```sql
-
+SELECT * FROM orders
+WHERE purch_amt > ANY (
+    SELECT purch_amt FROM orders
+    WHERE ord_date = '2012-09-10'
+);
 ```
 
 <br>
  
-#### 24. From the following tables, write a SQL query to find those orders where an order amount less than any order amount of a ..
+#### 24. From the following tables, write a SQL query to find those orders where an order amount less than any order amount of a customer lives in London City. Return ord_no, purch_amt, ord_date, customer_id and salesman_id.
 
 ```sql
-
+SELECT * FROM orders
+WHERE purch_amt < ANY (
+    SELECT purch_amt FROM orders
+    WHERE customer_id IN (
+        SELECT customer_id FROM customer
+        WHERE city = 'London'
+    )
+);
 ```
 
 <br>
@@ -1621,15 +1662,29 @@ WHERE 1 <= (
 #### 25. From the following tables, write a SQL query to find those orders where every order amount less than the maximum order amount of a customer lives in London City. Return ord_no, purch_amt, ord_date, customer_id and salesman_id.
 
 ```sql
-
+SELECT * FROM orders
+WHERE purch_amt < ANY (
+    SELECT MAX(purch_amt) FROM orders
+    WHERE customer_id IN (
+        SELECT customer_id FROM customer
+        WHERE city = 'London'
+    )
+);
 ```
 
 <br>
  
-#### 26. From the following tables, write a SQL query to find those customers whose grade are higher than customers living in New York City. Return customer_id, cust_name, city, grade and salesman_id.
+#### * 26. From the following tables, write a SQL query to find those customers whose grade are higher than customers living in New York City. Return customer_id, cust_name, city, grade and salesman_id.
 
 ```sql
-
+SELECT * FROM customer
+WHERE grade > ALL (
+    SELECT grade FROM customer
+    WHERE customer_id IN (
+        SELECT customer_id FROM customer
+        WHERE city = 'New York'
+    )
+);
 ```
 
 <br>
@@ -1637,7 +1692,10 @@ WHERE 1 <= (
 #### 27. From the following tables, write a SQL query to calculate the total order amount generated by a salesman. The salesman should belong to the cities where any of the customer living. Return salesman name, city and total order amount.
 
 ```sql
-
+SELECT salesman.name, salesman.city, SUM(orders.purch_amt) FROM salesman, orders, customer
+WHERE salesman.salesman_id = orders.salesman_id 
+AND salesman.city = customer.city
+GROUP BY salesman.name, salesman.city;
 ```
 
 <br>
@@ -1645,7 +1703,12 @@ WHERE 1 <= (
 #### 28. From the following tables, write a SQL query to find those customers whose grade doesn't same of those customers live in London City. Return customer_id, cust_name, city, grade and salesman_id.
 
 ```sql
-
+SELECT * FROM customer
+WHERE grade != ANY (
+    SELECT grade FROM customer
+    WHERE city = 'London'
+    AND grade IS NOT NULL
+);
 ```
 
 <br>
@@ -1653,7 +1716,12 @@ WHERE 1 <= (
 #### 29. From the following tables, write a SQL query to find those customers whose grade are not same of those customers living in Paris. Return customer_id, cust_name, city, grade and salesman_id.
 
 ```sql
-
+SELECT * FROM customer
+WHERE grade != ANY (
+    SELECT grade FROM customer
+    WHERE city = 'Paris'
+    AND grade IS NOT NULL
+);
 ```
 
 <br>
@@ -1661,7 +1729,12 @@ WHERE 1 <= (
 #### 30. From the following tables, write a SQL query to find all those customers who have different grade than any customer lives in Dallas City. Return customer_id, cust_name,city, grade and salesman_id.
 
 ```sql
-
+SELECT * FROM customer
+WHERE NOT grade IN (
+    SELECT grade FROM customer
+    WHERE city = 'Dallas'
+    AND grade IS NOT NULL
+);
 ```
 
 <br>
@@ -1669,7 +1742,9 @@ WHERE 1 <= (
 #### 31. From the following tables, write a SQL query to find the average price of each manufacturer's product along with their name. Return Average Price and Company.
 
 ```sql
-
+SELECT AVG(item_mast.pro_price), company_mast.com_name FROM company_mast, item_mast
+WHERE company_mast.com_id = item_mast.pro_com
+GROUP BY com_id;
 ```
 
 <br>
@@ -1677,7 +1752,10 @@ WHERE 1 <= (
 #### 32. From the following tables, write a SQL query to calculate the average price of the products and find price which are more than or equal to 350. Return Average Price and Company.
 
 ```sql
-
+SELECT AVG(item_mast.pro_price), company_mast.com_name FROM company_mast, item_mast
+WHERE company_mast.com_id = item_mast.pro_com
+GROUP BY com_id
+HAVING AVG(item_mast.pro_price) >= 350;
 ```
 
 <br>
@@ -1685,7 +1763,12 @@ WHERE 1 <= (
 #### 33. From the following tables, write a SQL query to find the most expensive product of each company. Return Product Name, Price and Company.
 
 ```sql
-
+SELECT item_mast.pro_name, item_mast.pro_price, company_mast.com_name FROM company_mast, item_mast
+WHERE company_mast.com_id = item_mast.pro_com
+AND item_mast.pro_price = (
+    SELECT MAX(item_mast.pro_price) FROM item_mast
+    WHERE company_mast.com_id = item_mast.pro_com
+);
 ```
 
 <br>
@@ -1693,7 +1776,8 @@ WHERE 1 <= (
 #### 34. From the following tables, write a SQL query to find those employees whose last name is 'Gabriel' or 'Dosio'. Return emp_idno, emp_fname, emp_lname and emp_dept.
 
 ```sql
-
+SELECT * FROM emp_details
+WHERE emp_lname IN ('Gabriel', 'Dosio');
 ```
 
 <br>
@@ -1701,7 +1785,8 @@ WHERE 1 <= (
 #### 35. From the following tables, write a SQL query to find the employees who work in department 89 or 63. Return emp_idno, emp_fname, emp_lname and emp_dept.
 
 ```sql
-
+SELECT * FROM emp_details
+WHERE emp_dept IN (89, 63);
 ```
 
 <br>
@@ -1709,7 +1794,11 @@ WHERE 1 <= (
 #### 36. From the following tables, write a SQL query to find those employees who work for the department where the department allotment amount is more than Rs. 50000. Return emp_fname and emp_lname.
 
 ```sql
-
+SELECT emp_fname, emp_lname FROM emp_details
+WHERE emp_dept IN (
+    SELECT dpt_code FROM emp_department
+    WHERE dpt_allotment > 50000
+);
 ```
 
 <br>
@@ -1717,7 +1806,10 @@ WHERE 1 <= (
 #### 37. From the following tables, write a SQL query to find the departments where the sanction amount is higher than the average sanction amount of all the departments. Return dpt_code, dpt_name and dpt_allotment.
 
 ```sql
-
+SELECT * FROM emp_department
+WHERE dpt_allotment > (
+    SELECT AVG(dpt_allotment) FROM emp_department
+);
 ```
 
 <br>
@@ -1725,7 +1817,12 @@ WHERE 1 <= (
 #### 38. From the following tables, write a SQL query to find the departments where more than two employees work. Return dpt_name.
 
 ```sql
-
+SELECT dpt_name FROM emp_department
+WHERE dpt_code IN (
+    SELECT emp_dept FROM emp_details
+    GROUP BY emp_dept
+    HAVING COUNT(emp_dept) > 2
+);
 ```
 
 <br>
@@ -1733,7 +1830,16 @@ WHERE 1 <= (
 #### 39. From the following tables, write a SQL query to find the departments where the sanction amount is second lowest. Return emp_fname and emp_lname.
 
 ```sql
-
+SELECT emp_fname, emp_lname FROM emp_details
+WHERE emp_dept IN (
+    SELECT dpt_code FROM emp_department
+    WHERE dpt_allotment = (
+        SELECT MIN(dpt_allotment) FROM emp_department
+        WHERE dpt_allotment > (
+            SELECT MIN(dpt_allotment) FROM emp_department
+        )
+    )
+);
 ```
 
 <br>
